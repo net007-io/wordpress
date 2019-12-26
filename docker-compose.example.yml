@@ -8,8 +8,8 @@ services:
 	networks:
 	  services:  
 	volumes:
-	  - ./openresty/config:/etc/nginx/conf.d:ro \
-	  - ./openresty/log:/var/log/nginx \
+	  - ./openresty/config:/etc/nginx/conf.d:ro
+	  - ./openresty/log:/var/log/nginx
 	ports:
 	  - 80:80
 	  - 443:443	
