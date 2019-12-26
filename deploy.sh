@@ -34,7 +34,7 @@ mkdir ~/docker/mysql
 echo "########## setup openresty & wordpress ##########"
 cd ~/docker
 docker network create --gateway 172.16.33.1 --subnet 172.16.33.0/24 services
-cp docker-compose.example.conf docker-compose.conf
+cp docker-compose.example.yml ~/docker/docker-compose.yml
 docker-compose up -d
 
 # setup acme.sh
