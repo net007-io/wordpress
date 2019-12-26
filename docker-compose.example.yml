@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+  openresty:
+	image: openresty/openresty:bionic
+	container_name: openresty
+	restart: always
+	networks:
+	  services:  
+	volumes:
+	  - ./openresty/config:/etc/nginx/conf.d:ro \
+	  - ./openresty/log:/var/log/nginx \
+	ports:
+	  - 80:80
+	  - 443:443	
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ******
+      MYSQL_DATABASE: ******
+      MYSQL_USER: ******
+      MYSQL_PASSWORD: ******
+    volumes:
+       - ./mysql/data:/var/lib/mysql
+    networks:
+      services:
+
+  wordpress:
+    depends_on:
+	  - openresty
+      - db
+    image: wordpress:latest
+    container_name: wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ******
+      WORDPRESS_DB_PASSWORD: ******
+      WORDPRESS_DB_NAME: ******
+    volumes:
+      - ./wordpress/data:/var/www/html
+    networks:
+      services:
+
+networks:
+  services:
+    name: services
+    external: true
