@@ -14,6 +14,7 @@ function get_latest_release() {
 }
 
 # constants
+DOMAIN=$1
 DOCKER_COMPOSE_LATEST_VERSION=`get_latest_release docker/compose`
 DOCKER_COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_LATEST_VERSION}/docker-compose-Linux-x86_64"
 
@@ -26,9 +27,15 @@ chmod +x /usr/local/bin/docker-compose
 mkdir ~/docker
 mkdir ~/docker/openresty
 mkdir ~/docker/openresty/config
+mkdir ~/docker/openresty/certs
 cp default.example.conf ~/docker/openresty/config/default.conf
 mkdir ~/docker/wordpress
 mkdir ~/docker/mysql
+
+# setup acme.sh
+curl -sfSL https://get.acme.sh | sh
+acme.sh --issue --dns dns_cf -d *.${DOMAIN} -d ${DOMAIN}
+acme.sh  --installcert  -d *.${DOAMIN} --key-file ~/docker/openresty/certs/private.key --fullchain-file ~/docker/openresty/certs/fullchain.cer
 
 # setup openresty & wordpress
 echo "########## setup openresty & wordpress ##########"
@@ -37,5 +44,3 @@ docker network create --gateway 172.16.33.1 --subnet 172.16.33.0/24 services
 cp docker-compose.example.yml ~/docker/docker-compose.yml
 docker-compose up -d
 
-# setup acme.sh
-curl -sfSL https://get.acme.sh | sh

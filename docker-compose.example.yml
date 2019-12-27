@@ -9,6 +9,7 @@ services:
 	  services:  
 	volumes:
 	  - ./openresty/config:/etc/nginx/conf.d:ro
+      - ./openresty/certs:/etc/nginx/certs:ro
 	  - ./openresty/log:/var/log/nginx
 	ports:
 	  - 80:80
